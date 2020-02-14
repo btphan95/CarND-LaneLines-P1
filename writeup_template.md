@@ -6,12 +6,9 @@
 
 ---
 
-**Finding Lane Lines on the Road**
+**Finding Lane Lines on the Road Using Image Processing Pipeline**
 
-The goals / steps of this project are the following:
-* Make a pipeline that finds lane lines on the road
-* Reflect on your work in a written report
-
+In this simple example, we attempt to mark lane boundaries in several images and videos using an image processing pipeline, implemented in OpenCV 
 
 [//]: # (Image References)
 
@@ -23,7 +20,23 @@ The goals / steps of this project are the following:
 
 ### 1. Describe your pipeline. As part of the description, explain how you modified the draw_lines() function.
 
-My pipeline consisted of 5 steps. First, I converted the images to grayscale, then I .... 
+The image processing pipeline consists of 5 steps:
+1. Grayscale the image
+2. Apply Gaussian blur to the image
+3. Apply Canny edge detection
+4. Apply a rectangular mask to approximate area of the lane
+5. Apply a Hough transform to return the approximation of the left and right lane boundaries
+
+In order to accurately create the lane boundaries, we used the output lines from the Hough transform and:
+1. separate the lines from left and right based on the lines' midpoints landing inside a curtain of values.
+2. averaging the lines to create one left line and right line
+3. Extrapolate the line to mark the entire lane boundaries (note that I chose to crop out the lane boundaries towards the vantage point to prevent obscuring it, for safety considerations).
+
+Here are some examples of the pipeline on images:
+  
+[image3]: ./output_images/solidWhiteCurve.jpg
+[image5]: ./output_images/solidWhiteRight.jpg
+
 
 In order to draw a single line on the left and right lanes, I modified the draw_lines() function by ...
 
