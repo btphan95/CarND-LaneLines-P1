@@ -1,14 +1,8 @@
 # **Finding Lane Lines on the Road** 
 
-## Writeup Template
-
-### You can use this file as a template for your writeup if you want to submit it as a markdown file. But feel free to use some other method and submit a pdf if you prefer.
-
----
-
 **Finding Lane Lines on the Road Using Image Processing Pipeline**
 
-In this simple example, we attempt to mark lane boundaries in several images and videos using an image processing pipeline, implemented in OpenCV 
+In this simple example, we attempt to mark lane boundaries in several images and videos using an image processing pipeline, implemented in OpenCV.
 
 [//]: # (Image References)
 
@@ -27,11 +21,7 @@ In this simple example, we attempt to mark lane boundaries in several images and
 [image13]: ./test_videos_output/yellow_stab.gif
 [image14]: ./test_videos_output/challenge_stab.gif
 
----
-
-### Reflection
-
-### 1. Describe your pipeline. As part of the description, explain how you modified the draw_lines() function.
+### 1. Image Processing Pipeline
 
 The image processing pipeline consists of 5 steps:
 1. Grayscale the image
@@ -57,8 +47,14 @@ Here are some examples of the pipeline on images:
 In videos, the output of the pipeline resulted in slightly shaky and sporadic lines, especially in the yellow lane video.
 In order to stabilize this, I created a cache to average out the lines from the last 10 frames. This resulted in more aesthetic lines that can allow the driver to better visualize the lanes while driving, for example.
 
-![alt text][image10] ![alt text][image11]
-![alt text][image12] ![alt text][image13]
+![alt text][image10]
+before stabilization
+![alt text][image11]
+after stabilization
+![alt text][image12]
+before stabilization
+![alt text][image13]
+after stabilization
 
 
 ### 
