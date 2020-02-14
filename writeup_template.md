@@ -34,7 +34,7 @@ In order to accurately create the lane boundaries, we used the output lines from
 
 Here are some examples of the pipeline on images:
   
-[image3]: ./output_images/solidWhiteCurve.jpg
+[image3]: ./output_images/solidWhiteCurve.jpg "Solid White Curve"
 [image5]: ./output_images/solidWhiteRight.jpg
 
 
