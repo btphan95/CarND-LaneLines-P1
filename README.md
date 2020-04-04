@@ -1,56 +1,73 @@
 # **Finding Lane Lines on the Road** 
-[![Udacity - Self-Driving Car NanoDegree](https://s3.amazonaws.com/udacity-sdc/github/shield-carnd.svg)](http://www.udacity.com/drive)
+[![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/btphan95/CarND-LaneLines-P1/master) Click here to launch a live Binder containing the notebook!
 
-<img src="examples/laneLines_thirdPass.jpg" width="480" alt="Combined Image" />
 
-Overview
----
 
 When we drive, we use our eyes to decide where to go.  The lines on the road that show us where the lanes are act as our constant reference for where to steer the vehicle.  Naturally, one of the first things we would like to do in developing a self-driving car is to automatically detect lane lines using an algorithm.
 
-In this project you will detect lane lines in images using Python and OpenCV.  OpenCV means "Open-Source Computer Vision", which is a package that has many useful tools for analyzing images.  
+In this simple project, we attempt to mark lane boundaries in several images and videos using an image processing pipeline, implemented in [OpenCV](https://github.com/opencv/opencv), a package that has many useful tools for analyzing images.
 
-To complete the project, two files will be submitted: a file containing project code and a file containing a brief write up explaining your solution. We have included template files to be used both for the [code](https://github.com/udacity/CarND-LaneLines-P1/blob/master/P1.ipynb) and the [writeup](https://github.com/udacity/CarND-LaneLines-P1/blob/master/writeup_template.md).The code file is called P1.ipynb and the writeup template is writeup_template.md 
+[//]: # (Image References)
 
-To meet specifications in the project, take a look at the requirements in the [project rubric](https://review.udacity.com/#!/rubrics/322/view)
+[image1]: ./examples/grayscale.jpg "Grayscale"
+[image2]: ./test_images/solidWhiteCurve.jpg
+[image3]: ./output_images/solidWhiteCurve.jpg
+[image4]: ./test_images/solidWhiteRight.jpg
+[image5]: ./output_images/solidWhiteRight.jpg
+[image6]: ./output_images/solidYellowCurve.jpg
+[image7]: ./output_images/solidYellowCurve2.jpg
+[image8]: ./output_images/solidYellowLeft.jpg
+[image9]: ./output_images/whiteCarLaneSwitch.jpg
+[image10]: ./test_videos_output/white.gif
+[image11]: ./test_videos_output/white_stab.gif
+[image12]: ./test_videos_output/yellow.gif
+[image13]: ./test_videos_output/yellow_stab.gif
+[image14]: ./test_videos_output/challenge_stab.gif
+
+### 1. Image Processing Pipeline
+
+The image processing pipeline consists of 5 steps:
+1. Grayscale the image
+2. Apply Gaussian blur to the image
+3. Apply Canny edge detection
+4. Apply a rectangular mask to approximate area of the lane
+5. Apply a Hough transform to return the approximation of the left and right lane boundaries
+
+In order to accurately create the lane boundaries, we used the output lines from the Hough transform and:
+1. separate the lines from left and right based on the lines' midpoints landing inside a curtain of values.
+2. averaging the lines to create one left line and right line
+3. Extrapolate the line to mark the entire lane boundaries (note that I chose to crop out the lane boundaries towards the vantage point to prevent obscuring it, for safety considerations).
+
+Here are some examples of the pipeline on images:
+
+![alt text][image3] 
+![alt text][image5]
+![alt text][image6]
+![alt text][image7]
+![alt text][image8]
+![alt text][image9]
+
+In videos, the output of the pipeline resulted in slightly shaky and sporadic lines, especially in the yellow lane video.
+In order to stabilize this, I created a cache to average out the lines from the last 10 frames. This resulted in more aesthetic lines that can allow the driver to better visualize the lanes while driving, for example.
+
+![alt text][image10]
+before stabilization
+![alt text][image11]
+after stabilization
+![alt text][image12]
+before stabilization
+![alt text][image13]
+after stabilization
 
 
-Creating a Great Writeup
----
-For this project, a great writeup should provide a detailed response to the "Reflection" section of the [project rubric](https://review.udacity.com/#!/rubrics/322/view). There are three parts to the reflection:
+### 
 
-1. Describe the pipeline
+One potential shortcoming of this image processing pipeline is that it does not perform well on curved roads, roads with obstacles, or images/videos captures under different lighting and environmental conditions than the ones taken in above images/videos.
+One primary reason is that the Hough transform was specifically tuned to the images/videos above.
+Secondly, the Hough transform may not be suitable for capturing curved roads because those roads would not create lines that the Hough transform could use.
+This is best illustrated in a video taken under different lighting on a curved road:
 
-2. Identify any shortcomings
+![alt text][image14]
 
-3. Suggest possible improvements
-
-We encourage using images in your writeup to demonstrate how your pipeline works.  
-
-All that said, please be concise!  We're not looking for you to write a book here: just a brief description.
-
-You're not required to use markdown for your writeup.  If you use another method please just submit a pdf of your writeup. Here is a link to a [writeup template file](https://github.com/udacity/CarND-LaneLines-P1/blob/master/writeup_template.md). 
-
-
-The Project
----
-
-## If you have already installed the [CarND Term1 Starter Kit](https://github.com/udacity/CarND-Term1-Starter-Kit/blob/master/README.md) you should be good to go!   If not, you should install the starter kit to get started on this project. ##
-
-**Step 1:** Set up the [CarND Term1 Starter Kit](https://github.com/udacity/CarND-Term1-Starter-Kit/blob/master/README.md) if you haven't already.
-
-**Step 2:** Open the code in a Jupyter Notebook
-
-You will complete the project code in a Jupyter notebook.  If you are unfamiliar with Jupyter Notebooks, check out [Udacity's free course on Anaconda and Jupyter Notebooks](https://classroom.udacity.com/courses/ud1111) to get started.
-
-Jupyter is an Ipython notebook where you can run blocks of code and see results interactively.  All the code for this project is contained in a Jupyter notebook. To start Jupyter in your browser, use terminal to navigate to your project directory and then run the following command at the terminal prompt (be sure you've activated your Python 3 carnd-term1 environment as described in the [CarND Term1 Starter Kit](https://github.com/udacity/CarND-Term1-Starter-Kit/blob/master/README.md) installation instructions!):
-
-`> jupyter notebook`
-
-A browser window will appear showing the contents of the current directory.  Click on the file called "P1.ipynb".  Another browser window will appear displaying the notebook.  Follow the instructions in the notebook to complete the project.  
-
-**Step 3:** Complete the project and submit both the Ipython notebook and the project writeup
-
-## How to write a README
-A well written README file can enhance your project and portfolio.  Develop your abilities to create professional README files by completing [this free course](https://www.udacity.com/course/writing-readmes--ud777).
+Suggested improvements to the pipeline to improve performance on this video would be to further tune the Hough transform parameters and perhaps use a different algorithm to detect lanes at the end.
 
